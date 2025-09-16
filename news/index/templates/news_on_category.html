@@ -18,7 +18,7 @@
             {% if user.is_authenticated %}
             <div class="text-end">
               <a href="/logout"><button type="button" class="btn btn-primary me-2">Выйти</button></a>
-              <a href="/cart"><button type="button" class="btn btn-primary">Мои закладки</button></a>
+              <a href="/favourite"><button type="button" class="btn btn-primary">Мои закладки</button></a>
             </div>
             {% else %}
             <div class="text-end">
@@ -49,7 +49,7 @@
             <div class="feature col">
                 <h3 class="fs-2 text-body-emphasis">{{ n }}</h3>
                 <p>{{ n.news_text|slice:64 }}...</p>
-                <p><a href="/category/{{ c.id }}">{{ n.news_category}}</a></p>
+                <p>{{ n.news_category}}</p>
                 <a href="/news/{{ n.id }}" class="icon-link">Подробнее</a>
             </div>
         </div>

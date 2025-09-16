@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Category, News
+from .models import Category, News, Favourite
 from .forms import RegForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
@@ -62,3 +62,31 @@ class Register(View):
 def logout_view(request):
     logout(request)
     return redirect('/')
+
+
+def add_to_favourite(request, pk):
+    if request.method == 'POST':
+        favourite_news = News.objects.get(id=pk)
+        user_have = int(request.POST.get('true_or_false'))
+        if user_have == 0:
+            Favourite.objects.create(user_id=request.user.id,
+                                     favourite_news=favourite_news,
+                                     have_favourite=True).save()
+            return redirect('/')
+        if user_have == 1:
+            Favourite.objects.create(user_id=request.user.id,
+                                     favourite_news=favourite_news,
+                                     have_favourite=False).save()
+            return redirect('/')
+        return redirect(f'/news_page/{pk}')
+
+def favourite_page(request):
+    favourite_news = Favourite.objects.filter(user_id=request.user.id,
+                                              have_favourite=True)
+    categories = Category.objects.all()
+    context = {
+        'favourite_news': favourite_news,
+        'categories': categories,
+    }
+
+    return render(request, 'favourite_page.html', context)

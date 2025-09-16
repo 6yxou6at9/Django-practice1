@@ -10,7 +10,7 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <h3>Новости "Пам-пам-пам"</h3>
-            <p class="nav col-12 col-lg-3 me-lg-auto mb-2 justify-content-center mb-md-0">Главная страница</p>
+            <a href="/" class="nav col-12 col-lg-3 me-lg-auto mb-2 justify-content-center mb-md-0">Главная страница</a>
             <form action="/search" method="post" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
                 {% csrf_token %}
                 <input name="search_product" type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
@@ -18,7 +18,6 @@
             {% if user.is_authenticated %}
             <div class="text-end">
               <a href="/logout"><button type="button" class="btn btn-primary me-2">Выйти</button></a>
-              <a href="/favourite"><button type="button" class="btn btn-primary">Мои закладки</button></a>
             </div>
             {% else %}
             <div class="text-end">
@@ -43,24 +42,14 @@
         <hr>
     </div>
     <div class="container px-4 py-3" id="featured-3">
-    <h2 class="pb-2 border-bottom">Последние новости:</h2>
-    {% for n in news %}
+    <h2 class="pb-2 border-bottom">Избранное:</h2>
+    {% for n in favourite_news %}
         <div class="row g-4 py-5 row-cols-1 row-cols-lg-1">
             <div class="feature col">
                 <h3 class="fs-2 text-body-emphasis">{{ n }}</h3>
-                <p>{{ n.news_text|slice:64 }}...</p>
-                <p><a href="/category/{{ n.news_category.id }}/">{{ n.news_category}}</a></p>
-                <a href="/news/{{ n.id }}" class="icon-link">Подробнее</a>
-                <form action="/add-to-favourite/{{ n.id }}/" method="post" >
-                    {% csrf_token %}
-                    <label class="switch">
-                        <span class="slider">В избранном</span>
-                        <input type="checkbox" name="true_or_false" {% if enabled %}checked{% endif %} onchange="this.form.submit()">
-                    </label>
-                </form>
-                    </label>
-                <button type="button" class="btn btn-primary">Войти</button>
-                </form>
+                <p>{{ n.favourite_news.news_text|slice:64 }}...</p>
+                <p><a href="/category/{{ categories.id }}">{{ n.favourite_news.news_category}}</a></p>
+                <a href="/news/{{ n.favourite_news.id }}" class="icon-link">Подробнее</a>
             </div>
         </div>
         {% endfor %}

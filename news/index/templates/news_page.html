@@ -6,6 +6,29 @@
     <title>{{ news.news_header }}</title>
 </head>
 <body>
+<header class="p-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <h3>Новости "Пам-пам-пам"</h3>
+            <a href="/" class="nav col-12 col-lg-3 me-lg-auto mb-2 justify-content-center mb-md-0">Главная страница</a>
+            <form action="/search" method="post" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                {% csrf_token %}
+                <input name="search_product" type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
+            </form>
+            {% if user.is_authenticated %}
+            <div class="text-end">
+              <a href="/logout"><button type="button" class="btn btn-primary me-2">Выйти</button></a>
+              <a href="/favourite"><button type="button" class="btn btn-primary">Мои закладки</button></a>
+            </div>
+            {% else %}
+            <div class="text-end">
+              <a href="/register"><button type="button" class="btn btn-warning me-2">Регистрация</button></a>
+              <a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Войти</button></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
 <div class="container d-flex 100">
 <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <span class="fs-4">Категории</span>
@@ -23,7 +46,7 @@
     <h1 class="display-6 fw-bold text-body-emphasis">{{ news.news_header }}</h1>
     <div class="col-lg-10"><p class="lead mb-4">{{ news.news_text }}</p>
         <div class="d-grid gap-2 d-sm-flex">
-            <p>Категория: <a href="news.news_category">{{ news.news_category }}</a></p>
+            <p>Категория: <a href="/category/{{ news.news_category.id }}/">{{ news.news_category }}</a></p>
         </div>
     </div>
 </div>

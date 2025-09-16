@@ -22,3 +22,15 @@ class News(models.Model):
 
     class Meta:
         verbose_name_plural = 'Новость'
+
+class Favourite(models.Model):
+    user_id = models.IntegerField()
+    favourite_news = models.ForeignKey(News, on_delete=models.CASCADE)
+    have_favourite = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return str(self.favourite_news)
+
+    class Meta:
+        verbose_name_plural = 'Избранное'
