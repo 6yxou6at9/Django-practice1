@@ -6,6 +6,29 @@
     <title>{{ categories }}</title>
 </head>
 <body>
+<header class="p-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <h3>Новости "Пам-пам-пам"</h3>
+            <a href="/" class="nav col-12 col-lg-3 me-lg-auto mb-2 justify-content-center mb-md-0">Главная страница</a>
+            <form action="/search" method="post" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                {% csrf_token %}
+                <input name="search_product" type="search" class="form-control" placeholder="Поиск..." aria-label="Search">
+            </form>
+            {% if user.is_authenticated %}
+            <div class="text-end">
+              <a href="/logout"><button type="button" class="btn btn-primary me-2">Выйти</button></a>
+              <a href="/cart"><button type="button" class="btn btn-primary">Мои закладки</button></a>
+            </div>
+            {% else %}
+            <div class="text-end">
+              <a href="/register"><button type="button" class="btn btn-warning me-2">Регистрация</button></a>
+              <a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Войти</button></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
 <div class="container d-flex 100">
     <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <span class="fs-4">Категории</span>
@@ -25,7 +48,7 @@
         <div class="row g-4 py-5 row-cols-1 row-cols-lg-1">
             <div class="feature col">
                 <h3 class="fs-2 text-body-emphasis">{{ n }}</h3>
-                <p>{{ n.news_text}}</p>
+                <p>{{ n.news_text|slice:64 }}...</p>
                 <p><a href="/category/{{ c.id }}">{{ n.news_category}}</a></p>
                 <a href="/news/{{ n.id }}" class="icon-link">Подробнее</a>
             </div>
