@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from unicodedata import category
-
+from django.shortcuts import render, redirect
 from .models import Category, News
-
+from .forms import RegForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
+from django.views import View
 
 # Create your views here.
 
@@ -34,3 +35,30 @@ def category_page (request, pk):
         'all_categories': all_categories
     }
     return render(request, 'news_on_category.html', context)
+
+class Register(View):
+    template_file = 'registration/register.html'
+
+    def get(self, request):
+        context = {'form': RegForm}
+        return render(request, self.template_file, context)
+
+    def post(self, request):
+        form = RegForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password2')
+
+            user = User.objects.create_user(username=username,
+                                            email=email,
+                                            password=password)
+            user.save()
+            login(request, user)
+            return redirect('/')
+
+
+# Выход из аккаунта
+def logout_view(request):
+    logout(request)
+    return redirect('/')
