@@ -51,16 +51,14 @@
                 <p>{{ n.news_text|slice:64 }}...</p>
                 <p><a href="/category/{{ n.news_category.id }}/">{{ n.news_category}}</a></p>
                 <a href="/news/{{ n.id }}" class="icon-link">Подробнее</a>
-                <form action="/add-to-favourite/{{ n.id }}/" method="post" >
+                {% if request.user in n.Favourite.all %}
+                <p>В закладках</p>
+                {% else %}
+                <form method="post" action="{% url 'add_to_favourite' pk=n.id %}">
                     {% csrf_token %}
-                    <label class="switch">
-                        <span class="slider">В избранном</span>
-                        <input type="checkbox" name="true_or_false" {% if enabled %}checked{% endif %} onchange="this.form.submit()">
-                    </label>
+                    <button type="submit" class="btn btn-primary" >Добавить в закладки</button>
                 </form>
-                    </label>
-                <button type="button" class="btn btn-primary">Войти</button>
-                </form>
+                {% endif %}
             </div>
         </div>
         {% endfor %}

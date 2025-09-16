@@ -8,6 +8,7 @@ from django.views import View
 # Create your views here.
 
 def home_page (request):
+    favourite_news = Favourite.objects.all()
     categories = Category.objects.all()
     news = News.objects.all()
     context = {
@@ -67,18 +68,15 @@ def logout_view(request):
 def add_to_favourite(request, pk):
     if request.method == 'POST':
         favourite_news = News.objects.get(id=pk)
-        user_have = int(request.POST.get('true_or_false'))
-        if user_have == 0:
-            Favourite.objects.create(user_id=request.user.id,
-                                     favourite_news=favourite_news,
-                                     have_favourite=True).save()
-            return redirect('/')
-        if user_have == 1:
-            Favourite.objects.create(user_id=request.user.id,
-                                     favourite_news=favourite_news,
-                                     have_favourite=False).save()
-            return redirect('/')
-        return redirect(f'/news_page/{pk}')
+        Favourite.objects.create(user_id=request.user.id,
+                                 favourite_news=favourite_news,
+                                 have_favourite=True).save()
+        return redirect('/')
+    return redirect('/')
+
+def del_from_favourite(request, pk):
+    Favourite.objects.filter(favourite_news=News.objects.get(id=pk)).delete()
+    return redirect('/favourite')
 
 def favourite_page(request):
     favourite_news = Favourite.objects.filter(user_id=request.user.id,
