@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Exists, OuterRef
 from .models import Category, News, Favourite
 from .forms import RegForm
 from django.contrib.auth.models import User
@@ -8,12 +9,15 @@ from django.views import View
 # Create your views here.
 
 def home_page (request):
-    favourite_news = Favourite.objects.all()
     categories = Category.objects.all()
-    news = News.objects.all()
+    favourite_news = Favourite.objects.filter(user_id=request.user.id,
+                                              favourite_news=OuterRef('pk'),
+                                              have_favourite=True)
+    news = News.objects.annotate(is_fav=Exists(favourite_news))
     context = {
+        'favourite_news': favourite_news,
         'categories': categories,
-        'news': news
+        'news': news,
     }
     return render(request, 'home.html', context)
 

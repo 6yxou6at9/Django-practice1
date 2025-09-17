@@ -51,7 +51,7 @@
                 <p>{{ n.news_text|slice:64 }}...</p>
                 <p><a href="/category/{{ n.news_category.id }}/">{{ n.news_category}}</a></p>
                 <a href="/news/{{ n.id }}" class="icon-link">Подробнее</a>
-                {% if request.user in n.Favourite.all %}
+                {% if n.is_fav %}
                 <p>В закладках</p>
                 {% else %}
                 <form method="post" action="{% url 'add_to_favourite' pk=n.id %}">
